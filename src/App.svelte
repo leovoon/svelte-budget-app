@@ -1,6 +1,6 @@
 <script lang="ts">
   import "carbon-components-svelte/css/all.css"
-  import { Dropdown, Tag, Button, TextInput, NumberInput, FluidForm, RadioButtonGroup, RadioButton, ExpandableTile } from "carbon-components-svelte"
+  import { Dropdown, Tag, Button, TextInput, NumberInput, RadioButtonGroup, RadioButton, ExpandableTile } from "carbon-components-svelte"
   import Add from "carbon-icons-svelte/lib/Add.svelte"
   import { budgets, expenses } from "./stores"
   let theme: "white" | "g10" | "g80" | "g90" | "g100" = "white"
@@ -21,7 +21,7 @@
   let selectedBudget = listOfBudgets[0].id
 
   $: textInput = radioSelected === "expense" ? textInputExpense : textInputBudget
-  $: textInputLabel = radioSelected === "expense" ? "what expense" : "which budget"
+  $: textInputLabel = radioSelected === "expense" ? "what expense" : "what budget"
 </script>
 
 <main>
@@ -35,12 +35,18 @@
     </RadioButtonGroup>
     <TextInput labelText={textInputLabel} bind:value={textInput} placeholder="Enter name..." />
 
-    <NumberInput min={1} value={1} label="how many" invalidText="Number must be greater than 0" />
-    <Dropdown direction="top" titleText="choose budget" inline bind:selectedId={selectedBudget} items={listOfBudgets} />
+    <NumberInput min={1} value={1} label="how many (RM)" invalidText="Amount must be greater than 0" />
+    {#if radioSelected === "expense"}
+      <Dropdown direction="top" titleText="which budget" inline bind:selectedId={selectedBudget} items={listOfBudgets} />
+    {/if}
+    <Button style="place-self: flex-end;" expressive kind="secondary" iconDescription="Add" icon={Add} />
   </div>
 
   <div style:margin-top="2rem" style:display="grid" style:gap="1rem">
-    <h4>History</h4>
+    <div style:display="flex" style:justify-content="space-between" style:align-items="center">
+      <h4>History</h4>
+      <Tag type="purple">RM {0}</Tag>
+    </div>
 
     {#each $budgets as { name: budgetName, amount }}
       <ExpandableTile tileMaxHeight={10} tileCollapsedIconText="Interact to expand budget" tileExpandedIconText="Interact to collapse budget">
@@ -70,7 +76,7 @@
   </div>
 </main>
 
-<footer>Made with Svelte by <a href="https://github.com/leovoon/svelte-budget-app">leovoon</a></footer>
+<footer style:text-align="center">Made with Svelte, <a href="https://carbondesignsystem.com/">Carbon</a>. Prototype by <a href="https://github.com/leovoon/svelte-budget-app">leovoon</a></footer>
 
 <style>
   :root {
