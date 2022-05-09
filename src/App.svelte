@@ -4,10 +4,9 @@
   import Add from "carbon-icons-svelte/lib/Add.svelte"
   import ChevronDown from "carbon-icons-svelte/lib/ChevronDown.svelte"
   import ChevronUp from "carbon-icons-svelte/lib/ChevronUp.svelte"
-  import { budgets, expenses, addBudget, addExpense, UncategorizedID } from "./stores"
+  import { budgets, expenses, addBudget, addExpense, UncategorizedID, themeStore } from "./stores"
   import { v4 as uuidv4 } from "uuid"
 
-  let theme: "white" | "g10" | "g80" | "g90" | "g100" = "white"
   let themeArray = [
     { id: "white", text: "White" },
     { id: "g10", text: "Gray 10" },
@@ -24,7 +23,11 @@
   let selectedBudget = UncategorizedID
   let expanded = false
 
-  $: document.documentElement.setAttribute("theme", theme)
+  $: {
+    localStorage.setItem("theme", $themeStore)
+
+    document.documentElement.setAttribute("theme", $themeStore)
+  }
   $: textInput = radioSelected === "expense" ? textInputExpense : textInputBudget
   $: numberInput = radioSelected === "expense" ? numberInputExpense : numberInputBudget
   $: textInputLabel = radioSelected === "expense" ? "what expense" : "what budget"
@@ -78,7 +81,7 @@
 
 <main>
   <h1>Svelte Budget</h1>
-  <Dropdown titleText="Select theme" bind:selectedId={theme} items={themeArray} />
+  <Dropdown titleText="Select theme" bind:selectedId={$themeStore} items={themeArray} />
   <br />
   <Form on:submit={handleSubmit}>
     <div style:display="grid" style:gap="1rem">
@@ -90,7 +93,7 @@
       {#if radioSelected === "expense"}
         <NumberInput min={1} bind:value={numberInput} label="how many (RM)" invalidText="Amount must be greater than 0" />
       {:else}
-        <Slider step={10} min={10} max={1000} bind:value={numberInput} labelText="max budget (RM)" />
+        <Slider step={10} min={10} max={10000} bind:value={numberInput} labelText="max budget (RM)" />
       {/if}
 
       {#if radioSelected === "expense"}

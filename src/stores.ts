@@ -29,3 +29,8 @@ export const expenses = writable([
 export function addExpense(expense){
     expenses.update(expenses => [...expenses, expense]);
 }
+
+
+// theme store
+const storedTheme = localStorage.getItem("theme");
+export const themeStore = writable(storedTheme);
