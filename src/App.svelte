@@ -25,7 +25,6 @@
 
   $: {
     localStorage.setItem("theme", $themeStore)
-
     document.documentElement.setAttribute("theme", $themeStore)
   }
   $: textInput = radioSelected === "expense" ? textInputExpense : textInputBudget

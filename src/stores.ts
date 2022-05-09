@@ -33,4 +33,4 @@ export function addExpense(expense){
 
 // theme store
 const storedTheme = localStorage.getItem("theme");
-export const themeStore = writable(storedTheme);
+export const themeStore = writable(storedTheme || "white");
